@@ -2,6 +2,7 @@
 
 namespace epii\app;
 
+use epii\template\i\IEpiiViewEngine;
 use think\Db;
 
 /**
@@ -14,6 +15,13 @@ class controller
 {
     private $_as = [];
     private $_js_as = [];
+
+    private $engine = null;
+
+    protected function setViewEngine(IEpiiViewEngine $engine)
+    {
+        $this->engine = $engine;
+    }
 
 
     public function assign(string $key, $value)
@@ -31,7 +39,7 @@ class controller
 
     public function display(string $file, Array $args = null)
     {
-        \epii\template\View::display($file, $args, null);
+        \epii\template\View::display($file, $args, $this->engine);
 
         exit;
     }
@@ -40,12 +48,12 @@ class controller
     {
 
 
-        \epii\admin\ui\EpiiAdminUi::showPage(\epii\template\View::fetch($file, $this->_as, null), array_merge($this->_js_as, ["title" => $title],$js_arr));
+        \epii\admin\ui\EpiiAdminUi::showPage(\epii\template\View::fetch($file, $this->_as, $this->engine), array_merge($this->_js_as, ["title" => $title],$js_arr));
     }
 
     public function fetch(string $file, Array $args = null)
     {
-        return \epii\template\View::fetch($file, $args, null);
+        return \epii\template\View::fetch($file, $args, $this->engine);
 
     }
 
