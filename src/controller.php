@@ -99,7 +99,7 @@ class controller
             $query_count = clone $table_name_or_query;
         }
         $count = $query_count->where($where)->count();
-        $list = $query->where($where)->limit(\epii\server\Args::getVal("offset"), \epii\server\Args::getVal("limit"))->select();
+        $list = $query->where($where)->limit(\epii\server\Args::params("offset"), \epii\server\Args::params("limit"))->select();
         $outdata = ["rows" => $row_callback ? array_map($row_callback, $list) : $list, "total" => $count];
         if ($callback) {
             $outdata['rows'] = $callback($outdata['rows']);
