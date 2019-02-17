@@ -37,23 +37,26 @@ class controller
         return $this;
     }
 
-    public function display(string $file, Array $args = null)
+    public function display(string $file = null, Array $args = null)
     {
-        \epii\template\View::display($file, $args, $this->engine);
+        if ($file)
+            \epii\template\View::display($file, $args ? array_merge($this->_as, $args) : $this->_as, $this->engine);
 
         exit;
     }
 
-    public function adminUiDisplay(string $file, string $title = "",Array $js_arr=[])
+    public function adminUiDisplay(string $file = null, string $title = "", Array $js_arr = [])
     {
 
-
-        \epii\admin\ui\EpiiAdminUi::showPage(\epii\template\View::fetch($file, $this->_as, $this->engine), array_merge($this->_js_as, ["title" => $title],$js_arr));
+        if ($file)
+            \epii\admin\ui\EpiiAdminUi::showPage(\epii\template\View::fetch($file, $this->_as, $this->engine), array_merge($this->_js_as, ["title" => $title], $js_arr));
     }
 
-    public function fetch(string $file, Array $args = null)
+    public function fetch(string $file = null, Array $args = null)
     {
-        return \epii\template\View::fetch($file, $args, $this->engine);
+        if ($file)
+            return \epii\template\View::fetch($file, $args ? array_merge($this->_as, $args) : $this->_as, $this->engine);
+        return "";
 
     }
 
