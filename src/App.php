@@ -17,7 +17,7 @@ class App extends \epii\server\App
     public function setConfig(IAppPlusInitConfig $appPlusInitConfig)
     {
         AppPlusInit::setConfig($appPlusInitConfig);
-        $this->init(AppPlusInit::class);
+        $this->init_unshift(AppPlusInit::class);
         return $this;
     }
 }
