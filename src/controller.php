@@ -55,7 +55,6 @@ class controller
     {
         if ($file == null) $file = $this->getDefaultFile();
 
-        var_dump($file);
         if ($file)
             \epii\template\View::display($file, $args ? array_merge($this->_as, $args) : $this->_as, $this->engine);
 
