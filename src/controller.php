@@ -24,12 +24,12 @@ class controller
     public function init()
     {
         $this->runer_class_name = get_class(App::getInstance()->getRunner()[0]);
-        $this->runer_function = get_class(App::getInstance()->getRunner()[1]);
+        $this->runer_function = App::getInstance()->getRunner()[1];
     }
 
     private function getDefaultFile()
     {
-        return strtolower(end(explode("\\", $this->runer_class_name))) . "/" . strtolower($this->runer_function);
+        return strtolower(str_replace("\\","/",substr($this->runer_class_name,strpos($this->runer_class_name,"\\" )+1))) . "/" . strtolower($this->runer_function);
     }
 
     protected function setViewEngine(IEpiiViewEngine $engine)
@@ -54,6 +54,8 @@ class controller
     public function display(string $file = null, Array $args = null)
     {
         if ($file == null) $file = $this->getDefaultFile();
+
+        var_dump($file);
         if ($file)
             \epii\template\View::display($file, $args ? array_merge($this->_as, $args) : $this->_as, $this->engine);
 
