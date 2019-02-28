@@ -18,6 +18,20 @@ class controller
 
     private $engine = null;
 
+    public $runer_class_name = "";
+    public $runer_function = "";
+
+    public function init()
+    {
+        $this->runer_class_name = get_class(App::getInstance()->getRunner()[0]);
+        $this->runer_function = get_class(App::getInstance()->getRunner()[1]);
+    }
+
+    private function getDefaultFile()
+    {
+        return strtolower(end(explode("\\", $this->runer_class_name))) . "/" . $this->runer_function;
+    }
+
     protected function setViewEngine(IEpiiViewEngine $engine)
     {
         $this->engine = $engine;
@@ -39,6 +53,7 @@ class controller
 
     public function display(string $file = null, Array $args = null)
     {
+        if ($file == null) $file = $this->getDefaultFile();
         if ($file)
             \epii\template\View::display($file, $args ? array_merge($this->_as, $args) : $this->_as, $this->engine);
 
@@ -47,13 +62,14 @@ class controller
 
     public function adminUiDisplay(string $file = null, string $title = "", Array $js_arr = [])
     {
-
+        if ($file == null) $file = $this->getDefaultFile();
         if ($file)
             \epii\admin\ui\EpiiAdminUi::showPage(\epii\template\View::fetch($file, $this->_as, $this->engine), array_merge($this->_js_as, ["title" => $title], $js_arr));
     }
 
     public function fetch(string $file = null, Array $args = null)
     {
+        if ($file == null) $file = $this->getDefaultFile();
         if ($file)
             return \epii\template\View::fetch($file, $args ? array_merge($this->_as, $args) : $this->_as, $this->engine);
         return "";
