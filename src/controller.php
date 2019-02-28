@@ -29,7 +29,7 @@ class controller
 
     private function getDefaultFile()
     {
-        return strtolower(end(explode("\\", $this->runer_class_name))) . "/" . $this->runer_function;
+        return strtolower(end(explode("\\", $this->runer_class_name))) . "/" . strtolower($this->runer_function);
     }
 
     protected function setViewEngine(IEpiiViewEngine $engine)
