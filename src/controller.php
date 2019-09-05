@@ -23,6 +23,8 @@ class controller
 
     public $runer_class_name = "";
     public $runer_function = "";
+    protected $_as_;
+    protected $_js_as_;
 
     public function init()
     {
@@ -33,7 +35,7 @@ class controller
 
     private function getDefaultFile()
     {
-        return strtolower(str_replace("\\","/",substr($this->runer_class_name,strpos($this->runer_class_name,"\\" )+1))) . "/" . strtolower($this->runer_function);
+        return strtolower(str_replace("\\", "/", substr($this->runer_class_name, strpos($this->runer_class_name, "\\") + 1))) . "/" . strtolower($this->runer_function);
     }
 
     protected function setViewEngine(IEpiiViewEngine $engine)
@@ -129,6 +131,14 @@ class controller
             $outdata['rows'] = $callback($outdata['rows']);
         }
         return json_encode($outdata, JSON_UNESCAPED_UNICODE);
+    }
+
+    public function __set($name, $value)
+    {
+        // TODO: Implement __set() method.
+        if (stripos($name, "_as_") === 0) {
+            $this->assign(substr($name, 4), $value);
+        }
     }
 
 }
