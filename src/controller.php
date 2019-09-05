@@ -2,6 +2,9 @@
 
 namespace epii\app;
 
+
+use epii\app\handler\JsCmdResponseHandler;
+use epii\server\Response;
 use epii\template\i\IEpiiViewEngine;
 use think\Db;
 
@@ -25,6 +28,7 @@ class controller
     {
         $this->runer_class_name = get_class(App::getInstance()->getRunner()[0]);
         $this->runer_function = App::getInstance()->getRunner()[1];
+        Response::setResponseHandler(new JsCmdResponseHandler());
     }
 
     private function getDefaultFile()
