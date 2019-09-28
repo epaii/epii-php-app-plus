@@ -125,7 +125,7 @@ class controller
             $query_count = clone $table_name_or_query;
         }
         $count = $query_count->where($where)->count();
-        $list = $query->where($where)->limit(\epii\server\Args::params("offset"), \epii\server\Args::params("limit"))->select();
+        $list = $query->where($where)->limit(\epii\server\Args::params("offset"), \epii\server\Args::params("limit"))->select()->toArray();
         $outdata = ["rows" => $row_callback ? array_map($row_callback, $list) : $list, "total" => $count];
         if ($callback) {
             $outdata['rows'] = $callback($outdata['rows']);
@@ -138,6 +138,9 @@ class controller
         // TODO: Implement __set() method.
         if (stripos($name, "_as_") === 0) {
             $this->assign(substr($name, 4), $value);
+        }
+        if (stripos($name, "_js_as_") === 0) {
+            $this->adminUijsArgs(substr($name, 7), $value);
         }
     }
 
