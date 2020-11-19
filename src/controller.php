@@ -2,11 +2,11 @@
 
 namespace epii\app;
 
-
 use epii\app\handler\JsCmdResponseHandler;
 use epii\server\Response;
 use epii\template\i\IEpiiViewEngine;
 use think\Db;
+use think\model\Collection;
 
 /**
  * Created by PhpStorm.
@@ -35,14 +35,13 @@ class controller
 
     private function getDefaultFile()
     {
-        return strtolower(str_replace("\\", "/", str_replace(App::getInstance()->runner_name_space_pre."\\", "",$this->runer_class_name))) . "/" . strtolower($this->runer_function);
+        return strtolower(str_replace("\\", "/", str_replace(App::getInstance()->runner_name_space_pre . "\\", "", $this->runer_class_name))) . "/" . strtolower($this->runer_function);
     }
 
     protected function setViewEngine(IEpiiViewEngine $engine)
     {
         $this->engine = $engine;
     }
-
 
     public function assign(string $key, $value)
     {
@@ -52,33 +51,48 @@ class controller
 
     public function assignArray(array $data)
     {
-        if ($data)
+        if ($data) {
             $this->_as = array_merge($this->_as, $data);
+        }
+
         return $this;
     }
 
-    public function display(string $file = null, Array $args = null)
+    public function display(string $file = null, array $args = null)
     {
-        if ($file == null) $file = $this->getDefaultFile();
+        if ($file == null) {
+            $file = $this->getDefaultFile();
+        }
 
-        if ($file)
+        if ($file) {
             \epii\template\View::display($file, $args ? array_merge($this->_as, $args) : $this->_as, $this->engine);
+        }
 
         exit;
     }
 
-    public function adminUiDisplay(string $file = null, string $title = "", Array $js_arr = [])
+    public function adminUiDisplay(string $file = null, string $title = "", array $js_arr = [])
     {
-        if ($file == null) $file = $this->getDefaultFile();
-        if ($file)
+        if ($file == null) {
+            $file = $this->getDefaultFile();
+        }
+
+        if ($file) {
             \epii\admin\ui\EpiiAdminUi::showPage(\epii\template\View::fetch($file, $this->_as, $this->engine), array_merge($this->_js_as, ["title" => $title], $js_arr));
+        }
+
     }
 
-    public function fetch(string $file = null, Array $args = null)
+    public function fetch(string $file = null, array $args = null)
     {
-        if ($file == null) $file = $this->getDefaultFile();
-        if ($file)
+        if ($file == null) {
+            $file = $this->getDefaultFile();
+        }
+
+        if ($file) {
             return \epii\template\View::fetch($file, $args ? array_merge($this->_as, $args) : $this->_as, $this->engine);
+        }
+
         return "";
 
     }
@@ -106,7 +120,6 @@ class controller
         $this->adminUijsArgs("appName", $pathtoname);
     }
 
-
     public function adminUiBaseDisplay(\epii\admin\ui\lib\i\epiiadmin\IEpiiAdminUi $adminUi)
     {
         \epii\admin\ui\EpiiAdminUi::showTopPage($adminUi);
@@ -126,6 +139,9 @@ class controller
         }
         $count = $query_count->where($where)->count();
         $list = $query->where($where)->limit(\epii\server\Args::params("offset"), \epii\server\Args::params("limit"))->select();
+        if ($list instanceof Collection) {
+            $list = $list->all();
+        }
         $outdata = ["rows" => $row_callback ? array_map($row_callback, $list) : $list, "total" => $count];
         if ($callback) {
             $outdata['rows'] = $callback($outdata['rows']);
