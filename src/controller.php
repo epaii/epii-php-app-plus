@@ -126,7 +126,7 @@ class controller
         exit;
     }
 
-    public function tableJsonData($table_name_or_query, $where, callable $row_callback = null, callable $callback = null)
+    public function tableJsonData($table_name_or_query, $where, callable $row_callback = null, callable $callback = null,$return_json = true)
     {
         $query_count = null;
         if (is_string($table_name_or_query)) {
@@ -146,7 +146,9 @@ class controller
         if ($callback) {
             $outdata['rows'] = $callback($outdata['rows']);
         }
+        if($return_json)
         return json_encode($outdata, JSON_UNESCAPED_UNICODE);
+        else return $outdata;
     }
 
     public function __set($name, $value)
